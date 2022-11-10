@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -11,7 +12,10 @@ use Laravel\Lumen\Auth\Authorizable;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory;
+    use Authenticatable;
+    use Authorizable;
+    use HasFactory;
+    use HasUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +23,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string[]
      */
     protected $fillable = [
-        'name', 'email',
+        'name', 'email', 'password', 'token', 'token_expiration',
     ];
 
     /**
@@ -28,6 +32,23 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string[]
      */
     protected $hidden = [
-        'password',
+        'password', 'token',
     ];
+
+    protected $casts = [
+        'token_expiration' => 'datetime',
+    ];
+
+    public function isTokenExpired(): bool
+    {
+        if (!$this->token_expiration || !$this->token) {
+            return true;
+        }
+
+        if (date_create('now') > $this->token_expiration) {
+            return true;
+        }
+
+        return false;
+    }
 }
