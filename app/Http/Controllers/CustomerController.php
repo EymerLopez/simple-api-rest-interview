@@ -72,7 +72,7 @@ class CustomerController extends Controller
             report($e);
             $response = new ApiResponse(500, null, $e->getMessage());
 
-            return $response->errorResponse(false);
+            return $response->errorResponse();
         }
     }
 
@@ -84,8 +84,7 @@ class CustomerController extends Controller
     public function destroy($dniOrEmail)
     {
         try {
-            $customer = Customer::active()
-            ->where('dni', $dniOrEmail)
+            $customer = Customer::where('dni', $dniOrEmail)
             ->orWhere('email', $dniOrEmail)
             ->first();
             $customer->delete();

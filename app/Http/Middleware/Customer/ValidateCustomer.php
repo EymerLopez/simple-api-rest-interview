@@ -46,9 +46,20 @@ class ValidateCustomer
                 break;
 
             case 'show':
-            case 'destroy':
                 $customer = Customer::active()
                 ->where('dni', $request->route()[2]['dniOrEmail'])
+                ->orWhere('email', $request->route()[2]['dniOrEmail'])
+                ->first();
+
+                if (!$customer) {
+                    $response = new ApiResponse(404, null, 'Cliente no existe');
+
+                    return $response->notFoundResponse();
+                }
+                break;
+
+            case 'destroy':
+                $customer = Customer::where('dni', $request->route()[2]['dniOrEmail'])
                 ->orWhere('email', $request->route()[2]['dniOrEmail'])
                 ->first();
 

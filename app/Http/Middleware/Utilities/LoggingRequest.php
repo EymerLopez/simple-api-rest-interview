@@ -29,7 +29,6 @@ class LoggingRequest
 
     public function terminate($request, $response)
     {
-        print_r($response);
         if (config('app.env') !== 'prod') {
             $index = $request->ip().' - Output: '.$request->fullUrl();
 
