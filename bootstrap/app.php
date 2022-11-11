@@ -76,15 +76,19 @@ JsonResource::withoutWrapping();
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    // App\Http\Middleware\ExampleMiddleware::class
+    App\Http\Middleware\Utilities\TrimStrings::class,
+    App\Http\Middleware\Utilities\ConvertEmptyStringsToNull::class,
+    App\Http\Middleware\Utilities\LoggingRequest::class,
+]);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'login' => App\Http\Middleware\Auth\ValidateLogin::class,
     'logout' => App\Http\Middleware\Auth\ValidateLogout::class,
     'refresh' => App\Http\Middleware\Auth\ValidateRefresh::class,
+    'validateCustomer' => App\Http\Middleware\Customer\ValidateCustomer::class,
 ]);
 
 /*
